@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <section class="contact">
+    <div class="contact-photo"></div>
+
+    <div class="contact-form">
+      <h2 class="title-lg">Conéctate con nosotros</h2>
+      <p class="muted">Estamos aquí para ayudarte a llevar tu negocio a la nube.</p>
+
+      <% if (ok) { %><div class="alert success"><%= ok %></div><% } %>
+
+      <form method="post" action="/contact" class="form">
+        <label>Nombre</label>
+        <input name="name" required placeholder="Nombre">
+
+        <label>Correo electrónico</label>
+        <input type="email" name="email" required placeholder="tu@empresa.com">
+
+        <label>¿Cómo podemos ayudarte?</label>
+        <textarea name="message" rows="4" placeholder="Cuéntanos tu consulta o servicio que necesitas..."></textarea>
+
+      <style>
+  fieldset.checks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columnas */
+    gap: 8px 20px; /* espacio entre filas y columnas */
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+
+  fieldset.checks label {
+    display: flex;
+    align-items: center; /* centra el texto verticalmente con el checkbox */
+    gap: 6px; /* espacio entre el checkbox y el texto */
+  }
+</style>
+
+<fieldset class="checks">
+  <legend>Servicios</legend>
+  <label><input type="checkbox" name="topics" value="Hosting Web Compartido"> Hosting Web Compartido</label>
+  <label><input type="checkbox" name="topics" value="Servidores VPS"> Servidores VPS</label>
+  <label><input type="checkbox" name="topics" value="Servidores Dedicados"> Servidores Dedicados</label>
+  <label><input type="checkbox" name="topics" value="Correo Corporativo"> Correo Corporativo</label>
+  <label><input type="checkbox" name="topics" value="Seguridad Web"> Seguridad Web</label>
+  <label><input type="checkbox" name="topics" value="Registro de Dominios"> Registro de Dominios</label>
+  <label><input type="checkbox" name="topics" value="Certificados SSL"> Certificados SSL</label>
+  <label><input type="checkbox" name="topics" value="Backup Automático"> Backup Automático</label>
+  <label><input type="checkbox" name="topics" value="Monitoreo y Escalabilidad"> Monitoreo y Escalabilidad</label>
+  <label><input type="checkbox" name="topics" value="Creador de Sitios Web"> Creador de Sitios Web</label>
+</fieldset>
+
+        <button class="btn" type="submit">Enviar mensaje</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="brandline"><div class="logo"></div><span>MAC</span></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body>
+  <%- include('partials/header') %>
+
+  <!-- Hero con atajos a todos los servicios -->
+  <section class="hero hero-light">
+    <div>
+      <h2 class="title-xl">Conéctate con nosotros</h2>
+      <p class="muted">Hola <strong><%= user.name %></strong>, explora los módulos del sitio.</p>
+
+      <!-- Primera fila -->
+      <div class="actions">
+        <a class="btn" href="/hosting">Hosting Web Compartido</a>
+        <a class="btn" href="/vps">Servidores VPS</a>
+        <a class="btn" href="/dedicados">Servidores Dedicados</a>
+        <a class="btn" href="/dominios">Registro de Dominios</a>
+        <a class="btn" href="/ssl">Certificados SSL</a>
+      </div>
+
+      <!-- Segunda fila -->
+      <div class="actions">
+        <a class="btn" href="/backup">Backup Automático</a>
+        <a class="btn" href="/correo">Correo Corporativo</a>
+        <a class="btn" href="/seguridad">Seguridad Web</a>
+        <a class="btn" href="/monitoreo">Monitoreo y Escalabilidad</a>
+        <a class="btn" href="/creador">Creador de Sitios Web</a>
+      </div>
+    </div>
+    <div class="hero-photo"></div>
+  </section>
+
+  <!-- Grid con servicios de la BD -->
+  <section class="grid">
+    <% services.forEach(s => { %>
+      <article class="card">
+        <h3><%= s.title %></h3>
+        <p class="muted"><%= s.price %></p>
+        <p><%= s.summary %></p>
+        <% if (s.title === 'Hosting Web Compartido') { %>
+          <a class="btn" href="/hosting">Quiero este servicio →</a>
+        <% } %>
+      </article>
+    <% }) %>
+  </section>
+
+  <footer class="footer">
+    <div class="brandline">
+      <div class="logo"></div><span>MAC</span>
+    </div>
+    <div class="cols">
+      <div>Política de privacidad</div>
+      <div>Copyright</div>
+      <div>Bogotá D.C</div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,229 @@
+:root{
+  --bg:#ffffff; --ink:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --primary:#0b0b0c; --accent:#00d084; --radius:14px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;
+  color:var(--ink);
+  background:var(--bg);
+}
+
+a{color:inherit;text-decoration:none}
+
+.center{display:flex;justify-content:center;align-items:center}
+.muted{color:var(--muted)}
+.center{text-align:center}
+
+.topbar{
+  display:flex;
+  gap:24px;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 28px;
+  border-bottom:1px solid var(--line);
+  background:#fafafa;
+}
+
+.brand{display:flex;align-items:center;gap:10px;}
+
+/* Logo base */
+.logo{
+  height:28px;
+  width:auto;
+  display:block;
+  object-fit:contain;
+}
+
+/* Logo grande centrado dentro del login-card */
+.logo.big{
+  height:64px;                 /* ajusta 56/72 si lo prefieres */
+  width:auto;
+  display:block;
+  margin:0 auto 12px auto;     /* centrado + espacio inferior */
+  object-fit:contain;
+}
+
+.nav{display:flex;gap:18px}
+
+.btn{
+  background:var(--primary);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:999px;
+  border:none;
+  display:inline-block
+ }
+.btn:hover{opacity:.92}
+
+/* Centra todo el contenido en pantalla */
+.centered{
+  display:grid;
+  place-items:center;
+  min-height:100vh;
+  padding-top:24px;
+}
+
+/* Tarjeta de login */
+.login-card{
+  width:min(520px, 92vw);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:32px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.05);
+  text-align:center;
+  display:grid;
+  gap:10px;
+}
+
+/* Formulario */
+.form{display:grid;gap:10px;margin-top:10px}
+input, textarea{
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  font:inherit;
+  width:100%;
+}
+label{font-size:14px;color:var(--muted)}
+
+.alert{
+  margin:10px 0;
+  padding:10px;
+  border-radius:10px;
+  background:#ffe8e8;
+  border:1px solid #ffc1c1;
+}
+.alert.success{background:#e6ffed;border-color:#b7f0c0}
+
+/* Título Bienvenido */
+.welcome{
+  margin:0 0 8px 0;
+  font-size:28px;
+  font-weight:800;
+  line-height:1.2;
+  text-align:center;
+}
+
+/* Secciones generales */
+.hero{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:32px;
+  align-items:center;
+  padding:48px 28px;
+  border-bottom:1px solid var(--line);
+}
+.hero-light{background:#f7f7f8}
+.hero-photo{
+  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  min-height:260px;
+  border-radius:12px;
+}
+
+.actions{display:flex;gap:12px;margin-top:16px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  padding:24px 28px;
+}
+.card{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+  background:#fff;
+}
+.section{padding:40px 28px}
+.title-xxl{font-size:56px;margin:0}
+.title-xl{font-size:40px;margin:0}
+.title-lg{font-size:28px;margin:0 0 8px 0}
+.title-md{font-size:20px}
+
+.about-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  align-items:center;
+  margin:24px 0;
+}
+.about-photo{
+  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  min-height:260px;
+  border-radius:12px;
+}
+.about-stats h3{margin:0 0 12px 0}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+.stat{font-weight:800;font-size:32px}
+
+.team{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin-top:18px;
+}
+.member{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+  text-align:center;
+  background:#fff;
+}
+.avatar{
+  width:60px;
+  height:60px;
+  border-radius:999px;
+  background:#d1d5db;
+  margin:0 auto 8px;
+}
+
+.contact{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:34px;
+  align-items:stretch;
+  padding:28px;
+  border-top:1px solid var(--line);
+}
+.contact-photo{
+  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  min-height:520px;
+  border-radius:12px;
+}
+.contact-form{padding:8px}
+
+.checks{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(220px,1fr));
+  gap:8px;
+}
+.checks label{display:flex;gap:8px;align-items:center}
+
+.checklist{max-width:760px;line-height:1.9}
+.checklist li{list-style:'✓  ';margin-left:12px}
+
+.footer{
+  border-top:1px solid var(--line);
+  padding:22px 28px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fafafa;
+}
+.brandline{display:flex;align-items:center;gap:10px}
+.cols{display:flex;gap:18px;font-size:14px;color:var(--muted)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:18px}
+  .hero1{grid-template-columns:1fr;gap:18px}
+  .contact{grid-template-columns:1fr}
+  .about-wrap{grid-template-columns:1fr}
+}

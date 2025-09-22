@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <%- include('partials/head') %>
+</head>
+<body class="centered">
+  <div class="login-card">  
+    <!-- LOGO dentro de la caja -->
+    <img src="/public/assets/img/logo.png" alt="Logo" class="logo big">
+
+    <!-- TÍTULO -->
+    <h1 class="welcome">Bienvenido</h1>
+    <p class="muted">Ingresa tus credenciales para gestionar el panel.</p>
+
+    <% if (error) { %><div class="alert"><%= error %></div><% } %>
+
+    <form method="post" action="/login" class="form">
+      <label>Nombre de usuario</label>
+      <input name="username" placeholder="Digita tu nombre de usuario" required>
+
+      <label>Contraseña</label>
+      <input type="password" name="password" placeholder="********" required>
+
+      <button class="btn" type="submit">Iniciar sesión</button>
+    </form>
+
+    <a class="link" href="#">Olvidé mi contraseña</a>
+  </div>
+</body>
+</html>

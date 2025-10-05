@@ -1,23 +1,9 @@
-// --- Iniciar DB si no existe (pegar cerca del inicio de server.js) ---
-const fs = require('fs');
-const path = require('path');
-const dbPath = path.join(__dirname, 'data.db');
-const schemaPath = path.join(__dirname, 'schema.sql');
-
-if (!fs.existsSync(dbPath)) {
-  const schema = fs.readFileSync(schemaPath, 'utf8');
-  const db = new sqlite3.Database(dbPath);
-  db.exec(schema, (err) => {
-    if (err) console.error('Error inicializando DB:', err);
-    else console.log('DB creada desde schema.sql');
-    db.close();
-  });
-}
-// ------------------------------------------------------------------
 // -------------------------------
 // server.js
 // Sitio en Express con EJS + SQLite, sesiones y formulario de contacto
 // -------------------------------
+
+// === Importaciones ===
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
@@ -25,11 +11,27 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
 
+// === Inicialización de la app ===
 const app = express();
 const DB_PATH = path.join(__dirname, 'data.db');
+const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
+const PORT = process.env.PORT || 3000;
+
+// === Crear DB si no existe ===
+if (!fs.existsSync(DB_PATH)) {
+  const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
+  const dbInit = new sqlite3.Database(DB_PATH);
+  dbInit.exec(schema, (err) => {
+    if (err) console.error('Error inicializando DB:', err);
+    else console.log('DB creada desde schema.sql');
+    dbInit.close();
+  });
+}
+
+// === Conexión a la base de datos ===
 const db = new sqlite3.Database(DB_PATH);
 
-// ---------- Utilidades DB ----------
+// === Funciones de utilidad para SQLite ===
 function run(sql, params = []) {
   return new Promise((resolve, reject) => {
     db.run(sql, params, function (err) {
@@ -37,37 +39,35 @@ function run(sql, params = []) {
     });
   });
 }
+
 function get(sql, params = []) {
   return new Promise((resolve, reject) => {
     db.get(sql, params, (err, row) => err ? reject(err) : resolve(row));
   });
 }
+
 function all(sql, params = []) {
   return new Promise((resolve, reject) => {
     db.all(sql, params, (err, rows) => err ? reject(err) : resolve(rows));
   });
 }
-// Ejecuta múltiples sentencias (CREATE TABLE ...; CREATE TABLE ...;)
+
 function exec(sql) {
   return new Promise((resolve, reject) => {
     db.exec(sql, (err) => err ? reject(err) : resolve());
   });
 }
 
-// ---------- Inicialización ----------
+// === Inicialización del esquema ===
 async function ensureSchema() {
-  // PRAGMAs
   await run('PRAGMA journal_mode = WAL;');
   await run('PRAGMA foreign_keys = ON;');
 
-  // Cargar y aplicar schema.sql (si existe, permite múltiples sentencias)
-  const schemaPath = path.join(__dirname, 'schema.sql');
-  if (fs.existsSync(schemaPath)) {
-    const schema = fs.readFileSync(schemaPath, 'utf8');
+  if (fs.existsSync(SCHEMA_PATH)) {
+    const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
     if (schema.trim()) await exec(schema);
   }
 
-  // Verificación defensiva por si el archivo de esquema fue modificado/recortado
   const needServices = await get("SELECT name FROM sqlite_master WHERE type='table' AND name='services'");
   if (!needServices) {
     await run(`
@@ -79,6 +79,7 @@ async function ensureSchema() {
       )
     `);
   }
+
   const needUsers = await get("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
   if (!needUsers) {
     await run(`
@@ -90,6 +91,7 @@ async function ensureSchema() {
       )
     `);
   }
+
   const needMessages = await get("SELECT name FROM sqlite_master WHERE type='table' AND name='messages'");
   if (!needMessages) {
     await run(`
@@ -103,9 +105,11 @@ async function ensureSchema() {
       )
     `);
   }
+
   console.log('Esquema verificado/aplicado correctamente.');
 }
 
+// === Semillas iniciales ===
 async function seedIfEmpty() {
   const row = await get('SELECT COUNT(*) AS c FROM users');
   if (row.c === 0) {
@@ -123,27 +127,22 @@ async function seedIfEmpty() {
     for (const s of services) {
       await run('INSERT INTO services (title, price, summary) VALUES (?, ?, ?)', s);
     }
+
     console.log('BD inicializada con usuario admin / Admin*1234 y servicios de ejemplo.');
   }
 }
 
-// Ejecutar init con --init
+// === Inicializar BD y esquemas ===
 (async () => {
   try {
     await ensureSchema();
-    if (process.argv.includes('--init')) {
-      await seedIfEmpty();
-      console.log('Init completo. Puedes cerrar este proceso.');
-      process.exit(0);
-    } else {
-      await seedIfEmpty();
-    }
+    await seedIfEmpty();
   } catch (e) {
     console.error('Error al inicializar el esquema/seed:', e);
   }
 })();
 
-// ---------- App ----------
+// === Configuración de Express ===
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -158,13 +157,13 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 } // 1 hora
 }));
 
-// Middleware de protección
+// === Middleware de autenticación ===
 function requireAuth(req, res, next) {
   if (req.session.user) return next();
   return res.redirect('/login');
 }
 
-// --------- Rutas públicas ----------
+// === Rutas públicas ===
 app.get('/', (req, res) => res.redirect('/login'));
 
 app.get('/login', (req, res) => {
@@ -193,7 +192,7 @@ app.post('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/login'));
 });
 
-// --------- Rutas privadas ----------
+// === Rutas privadas ===
 app.get('/dashboard', requireAuth, async (req, res) => {
   try {
     const services = await all('SELECT * FROM services');
@@ -227,7 +226,7 @@ app.post('/contact', requireAuth, async (req, res) => {
   }
 });
 
-// ---------- Páginas de servicios ----------
+// === Rutas de servicios ===
 app.get('/hosting', requireAuth, async (req, res) => {
   try {
     const hosting = await get('SELECT * FROM services WHERE title = ?', ['Hosting Web Compartido']);
@@ -238,42 +237,13 @@ app.get('/hosting', requireAuth, async (req, res) => {
   }
 });
 
-app.get('/vps', requireAuth, (req, res) => {
-  res.render('services/vps', { user: req.session.user });
-});
+// Otras páginas
+const servicePages = ['vps', 'dedicados', 'dominios', 'ssl', 'backup', 'correo', 'seguridad', 'monitoreo', 'creador'];
+for (const page of servicePages) {
+  app.get(`/${page}`, requireAuth, (req, res) => {
+    res.render(`services/${page}`, { user: req.session.user });
+  });
+}
 
-app.get('/dedicados', requireAuth, (req, res) => {
-  res.render('services/dedicados', { user: req.session.user });
-});
-
-app.get('/dominios', requireAuth, (req, res) => {
-  res.render('services/dominios', { user: req.session.user });
-});
-
-app.get('/ssl', requireAuth, (req, res) => {
-  res.render('services/ssl', { user: req.session.user });
-});
-
-app.get('/backup', requireAuth, (req, res) => {
-  res.render('services/backup', { user: req.session.user });
-});
-
-app.get('/correo', requireAuth, (req, res) => {
-  res.render('services/correo', { user: req.session.user });
-});
-
-app.get('/seguridad', requireAuth, (req, res) => {
-  res.render('services/seguridad', { user: req.session.user });
-});
-
-app.get('/monitoreo', requireAuth, (req, res) => {
-  res.render('services/monitoreo', { user: req.session.user });
-});
-
-app.get('/creador', requireAuth, (req, res) => {
-  res.render('services/creador', { user: req.session.user });
-});
-
-// ---------- Arranque ----------
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor listo en http://localhost:${PORT}`))
+// === Arranque del servidor ===
+app.listen(PORT, () => console.log(`Servidor listo en el puerto ${PORT}`));

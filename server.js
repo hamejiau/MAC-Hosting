@@ -1,7 +1,6 @@
 // --- Iniciar DB si no existe (pegar cerca del inicio de server.js) ---
 const fs = require('fs');
 const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
 const dbPath = path.join(__dirname, 'data.db');
 const schemaPath = path.join(__dirname, 'schema.sql');
 
@@ -19,7 +18,12 @@ if (!fs.existsSync(dbPath)) {
 // server.js
 // Sitio en Express con EJS + SQLite, sesiones y formulario de contacto
 // -------------------------------
-
+const express = require('express');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
+const sqlite3 = require('sqlite3').verbose();
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const DB_PATH = path.join(__dirname, 'data.db');

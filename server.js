@@ -1,3 +1,20 @@
+// --- Iniciar DB si no existe (pegar cerca del inicio de server.js) ---
+const fs = require('fs');
+const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
+const dbPath = path.join(__dirname, 'data.db');
+const schemaPath = path.join(__dirname, 'schema.sql');
+
+if (!fs.existsSync(dbPath)) {
+  const schema = fs.readFileSync(schemaPath, 'utf8');
+  const db = new sqlite3.Database(dbPath);
+  db.exec(schema, (err) => {
+    if (err) console.error('Error inicializando DB:', err);
+    else console.log('DB creada desde schema.sql');
+    db.close();
+  });
+}
+// ------------------------------------------------------------------
 // -------------------------------
 // server.js
 // Sitio en Express con EJS + SQLite, sesiones y formulario de contacto

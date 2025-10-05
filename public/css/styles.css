@@ -120,7 +120,7 @@ label{font-size:14px;color:var(--muted)}
 }
 .hero-light{background:#f7f7f8}
 .hero-photo{
-  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  background:url('/public/assets/img/machosting.png') center/cover;
   min-height:260px;
   border-radius:12px;
 }
@@ -152,7 +152,7 @@ label{font-size:14px;color:var(--muted)}
   margin:24px 0;
 }
 .about-photo{
-  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  background:url('/public/assets/img/machosting2.png') center/cover;
   min-height:260px;
   border-radius:12px;
 }
@@ -183,6 +183,25 @@ label{font-size:14px;color:var(--muted)}
   border-radius:999px;
   background:#d1d5db;
   margin:0 auto 8px;
+  /* mantiene el encuadre correcto si hay imagen */
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+
+/* 3 avatares locales PNG:
+   Mujer  -> /public/assets/img/avatar 1.png
+   Hombre -> /public/assets/img/avatar2.png
+   Hombre -> /public/assets/img/avatar3.png
+   (solo cambian estas rutas) */
+.team .member:nth-child(1) .avatar{
+  background-image:url('/public/assets/img/avatar1.png');
+}
+.team .member:nth-child(2) .avatar{
+  background-image:url('/public/assets/img/avatar3.png');
+}
+.team .member:nth-child(3) .avatar{
+  background-image:url('/public/assets/img/avatar2.png');
 }
 
 .contact{
@@ -194,7 +213,7 @@ label{font-size:14px;color:var(--muted)}
   border-top:1px solid var(--line);
 }
 .contact-photo{
-  background:url('https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=800&q=60') center/cover;
+  background:url('/public/assets/img/contactanos.png') center/cover;
   min-height:520px;
   border-radius:12px;
 }

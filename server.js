@@ -22,7 +22,7 @@ if (!fs.existsSync(dbPath)) {
 const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
-const sqlite3 = require('sqlite3').verbose();
+
 const fs = require('fs');
 const path = require('path');
 
